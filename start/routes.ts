@@ -20,14 +20,17 @@
 
 import Route from '@ioc:Adonis/Core/Route'
 
-Route.get('/', async () => {
-  return { hello: 'world' }
-})
-
 Route.group(() => {
   Route.post("register", "AuthController.register");
   Route.post("login", "AuthController.login");
 
+  Route.group(() => {
+    Route.get("getAll", "ContentsController.index");
+    Route.post("create", "ContentsController.store");
+    Route.get("show/:id", "ContentsController.show");
+    Route.put("update/:id", "ContentsController.update");
+    Route.delete("delete/:id", "ContentsController.destroy");
+  }).prefix("content");
   // Route.group(() => {
 
   // }).middleware("auth:api");
