@@ -3,7 +3,7 @@ import Content from 'App/Models/Content'
 
 export default class ContentsController {
   public async index({ response }: HttpContextContract) {
-    
+
     try {
       const contents = await Content.all();
 
@@ -13,33 +13,69 @@ export default class ContentsController {
     }
   }
 
-  public async create({}: HttpContextContract) {}
-
   public async store({ request, response }: HttpContextContract) {
     const { title, type, duration, link, author, category } = request.all()
 
     try {
 
       const newContent = await Content.create({
-        title, 
+        title,
         type,
         duration,
         link,
         author,
         category
       })
-      
+
       return response.status(201).send(newContent)
     } catch (error) {
       console.log(error)
     }
   }
 
-  public async show({}: HttpContextContract) {}
+  public async show({params, response}: HttpContextContract) {
+    const { id } = params
 
-  public async edit({}: HttpContextContract) {}
+    try {
+      const content = await Content.findOrFail(id)
 
-  public async update({}: HttpContextContract) {}
+      return response.status(200).send(content)
+    } catch (error) {
+      console.log(error)
+    }
+  }
 
-  public async destroy({}: HttpContextContract) {}
+  public async update({ request, response, params}: HttpContextContract) {
+    const { id } = params
+
+    const newContent = request.only(['title', 'type', 'duration', 'link', 'author', 'category'])
+    // const { title, type, duration, link, author, category } = request.all()
+
+    try {
+      const content = await Content.findOrFail(id)
+
+      content.merge(newContent)
+
+      await content.save()
+
+      return response.status(200).send(content)
+    } catch (error) {
+      console.log(error)
+    }
+
+  }
+
+  public async destroy({ response, params }: HttpContextContract) {
+    const { id } = params
+
+    try {
+      const content = await Content.findOrFail(id)
+
+      await content.delete()
+
+      return response.status(200).send({ message: `Content ${id} deleted` })
+    } catch (error) {
+      console.log(error)
+    }
+  }
 }
