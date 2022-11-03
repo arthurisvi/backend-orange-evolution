@@ -4,7 +4,10 @@ import {
   column,
   beforeSave,
   BaseModel,
+  manyToMany,
+  ManyToMany,
 } from '@ioc:Adonis/Lucid/Orm'
+import Tail from './Trail'
 import { UserTag } from './Enums/UserTag'
 
 export default class User extends BaseModel {
@@ -25,6 +28,12 @@ export default class User extends BaseModel {
 
   @column()
   public tag: UserTag
+
+  @manyToMany(() => Tail, {
+    pivotTable: 'trail_user',
+    pivotColumns: ['status'],
+  })
+  public trails: ManyToMany<typeof Tail>
 
   @column.dateTime({ autoCreate: true })
   public createdAt: DateTime
