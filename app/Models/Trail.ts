@@ -1,5 +1,6 @@
 import { DateTime } from 'luxon'
-import { BaseModel, column } from '@ioc:Adonis/Lucid/Orm'
+import { BaseModel, column, HasMany, hasMany } from '@ioc:Adonis/Lucid/Orm'
+import Content from './Content'
 
 export default class Trail extends BaseModel {
   @column({ isPrimary: true })
@@ -13,6 +14,9 @@ export default class Trail extends BaseModel {
 
   @column()
   public estimatedTime: number
+
+  @hasMany(() => Content)
+  public contents: HasMany<typeof Content>
 
   @column.dateTime({ autoCreate: true })
   public createdAt: DateTime
