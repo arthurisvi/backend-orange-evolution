@@ -1,4 +1,5 @@
 import type { HttpContextContract } from '@ioc:Adonis/Core/HttpContext'
+import Content from 'App/Models/Content';
 import Trail from 'App/Models/Trail';
 
 export default class TrailsController {
@@ -7,6 +8,18 @@ export default class TrailsController {
       const trails = await Trail.all();
 
       return response.status(200).send(trails)
+    } catch (error) {
+      console.log(error)
+    }
+  }
+
+  public async getContents({ response, params }: HttpContextContract) {
+    try {
+      const { id } = params;
+
+      const contents = await Content.query().where('trail_id', id).orWhereNull('trail_id');
+
+      return response.status(200).send(contents)
     } catch (error) {
       console.log(error)
     }

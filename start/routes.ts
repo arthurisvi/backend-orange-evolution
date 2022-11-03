@@ -31,6 +31,17 @@ Route.group(() => {
     Route.put("update/:id", "ContentsController.update");
     Route.delete("delete/:id", "ContentsController.destroy");
   }).prefix("content");
+
+  Route.group(() => {
+    Route.get('getAll', 'TrailsController.index')
+    Route.get('getContents/:id', 'TrailsController.getContents')
+  }).prefix("trail");
+
+  Route.group(() => {
+    Route.get('show/:id', 'UsersController.show')
+    Route.get('getTrails/:id', 'UsersController.getTrails')
+    Route.post('signTrail', 'UsersController.signTrail')
+  }).prefix("user")
   // Route.group(() => {
 
   // }).middleware("auth:api");
