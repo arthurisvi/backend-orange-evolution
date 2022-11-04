@@ -84,4 +84,17 @@ export default class ContentsController {
       console.log(error)
     }
   }
+
+  public async filterContents({ response, request }: HttpContextContract) {
+
+    try {
+      const query = request.only(['id_trail', 'category'])
+
+      const contents = await Content.query().where('trail_id', query.id_trail).andWhere('category', query.category)
+
+      return response.status(200).send(contents)
+    } catch (error) {
+      return response.status(500).send(error)
+    }
+  }
 }
