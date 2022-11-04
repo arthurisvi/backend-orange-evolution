@@ -1,4 +1,5 @@
 import type { HttpContextContract } from '@ioc:Adonis/Core/HttpContext'
+import ContentUser from 'App/Models/ContentUser';
 import Trail from 'App/Models/Trail'
 import User from 'App/Models/User'
 
@@ -47,5 +48,21 @@ export default class UsersController {
       console.log(error)
     }
 
+  }
+
+  public async setContentStatus({request, response}: HttpContextContract){
+    const { idContent, idUser, status } = request.all()
+
+    try {
+
+      const contentUser = await ContentUser.query().where('user_id', idUser).andWhere('content_id', idContent).firstOrFail()
+
+      contentUser.status = status
+
+      contentUser.save
+      return response.status(200).send(contentUser)
+    } catch (error) {
+      console.log(error)
+    }
   }
 }

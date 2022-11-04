@@ -42,6 +42,7 @@ Route.group(() => {
     Route.get('show/:id', 'UsersController.show')
     Route.get('getTrails/:id', 'UsersController.getTrails')
     Route.post('signTrail', 'UsersController.signTrail')
+    Route.post('setContentStatus', 'UsersController.setContentStatus')
   }).prefix("user")
   // Route.group(() => {
 
