@@ -1,7 +1,9 @@
 import type { HttpContextContract } from '@ioc:Adonis/Core/HttpContext'
+import Content from 'App/Models/Content';
 import ContentUser from 'App/Models/ContentUser';
 import Trail from 'App/Models/Trail'
 import User from 'App/Models/User'
+import { Status } from 'App/Models/Enums/Status';
 
 export default class UsersController {
 
@@ -30,7 +32,21 @@ export default class UsersController {
 
       await user.related('trails').attach([trail.id]);
 
-      return response.status(200).send({message: `Usuário cadastrado na trilha ${trail.name}`})
+      const contents = await Content.all();
+
+      if (contents.length > 0) {
+        contents.forEach(async (content) => {
+          if (content.trailId === idTrail || !content.trailId) {
+            await ContentUser.create({
+              content_id: content.id,
+              user_id: idUser,
+              status: Status.NOT_STARTED
+            })
+          }
+        })
+      }
+
+      return response.status(200).send({ message: `Usuário cadastrado na trilha ${trail.name}` })
     } catch (error) {
       console.log(error)
     }
@@ -50,7 +66,7 @@ export default class UsersController {
 
   }
 
-  public async setContentStatus({request, response}: HttpContextContract){
+  public async setContentStatus({ request, response }: HttpContextContract) {
     const { idContent, idUser, status } = request.all()
 
     try {
