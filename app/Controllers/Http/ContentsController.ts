@@ -20,7 +20,10 @@ export default class ContentsController {
     try {
 
       const trail = await Trail.findOrFail(idTrail)
-
+      if(
+        category === 'initial' && idTrail !== null 
+      ) return response.status(400).send({ message: 'Operação Inválida' })
+      
       const newContent = await Content.create({
         title,
         type,
