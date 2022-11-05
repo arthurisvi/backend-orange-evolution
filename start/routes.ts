@@ -30,7 +30,21 @@ Route.group(() => {
     Route.get("show/:id", "ContentsController.show");
     Route.put("update/:id", "ContentsController.update");
     Route.delete("delete/:id", "ContentsController.destroy");
+    Route.get("filter", "ContentsController.filterContents");
   }).prefix("content");
+
+  Route.group(() => {
+    Route.get('getAll', 'TrailsController.index')
+    Route.get('getContents/:id', 'TrailsController.getContents')
+  }).prefix("trail");
+
+  Route.group(() => {
+    Route.get('show/:id', 'UsersController.show')
+    Route.get('getTrails/:id', 'UsersController.getTrails')
+    Route.get(':id/contentTrail', 'UsersController.getAssociatedContentByTrail')
+    Route.post('signTrail', 'UsersController.signTrail')
+    Route.patch('contentStatus', 'UsersController.setContentStatus')
+  }).prefix("user")
   // Route.group(() => {
 
   // }).middleware("auth:api");

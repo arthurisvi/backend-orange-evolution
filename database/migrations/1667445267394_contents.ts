@@ -11,6 +11,7 @@ export default class Contents extends BaseSchema {
       table.string('duration').notNullable()
       table.string('link').notNullable()
       table.string('author').notNullable()
+      table.integer('trail_id').unsigned().references('trails.id').nullable()
       table.enum('category', ['initial', 'basicConcepts', 'optional'])
       table.timestamps(true)
     })

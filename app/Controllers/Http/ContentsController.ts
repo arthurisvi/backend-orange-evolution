@@ -1,5 +1,6 @@
 import type { HttpContextContract } from '@ioc:Adonis/Core/HttpContext'
 import Content from 'App/Models/Content'
+import Trail from 'App/Models/Trail';
 
 export default class ContentsController {
   public async index({ response }: HttpContextContract) {
@@ -14,9 +15,11 @@ export default class ContentsController {
   }
 
   public async store({ request, response }: HttpContextContract) {
-    const { title, type, duration, link, author, category } = request.all()
+    const { title, type, duration, link, author, category, idTrail } = request.all()
 
     try {
+
+      const trail = await Trail.findOrFail(idTrail)
 
       const newContent = await Content.create({
         title,
@@ -26,6 +29,10 @@ export default class ContentsController {
         author,
         category
       })
+
+      if (trail) {
+        await newContent.related('trail').associate(trail)
+      }
 
       return response.status(201).send(newContent)
     } catch (error) {
@@ -49,7 +56,6 @@ export default class ContentsController {
     const { id } = params
 
     const newContent = request.only(['title', 'type', 'duration', 'link', 'author', 'category'])
-    // const { title, type, duration, link, author, category } = request.all()
 
     try {
       const content = await Content.findOrFail(id)
@@ -76,6 +82,19 @@ export default class ContentsController {
       return response.status(200).send({ message: `Content ${id} deleted` })
     } catch (error) {
       console.log(error)
+    }
+  }
+
+  public async filterContents({ response, request }: HttpContextContract) {
+
+    try {
+      const query = request.only(['id_trail', 'category'])
+
+      const contents = await Content.query().where('trail_id', query.id_trail).andWhere('category', query.category)
+
+      return response.status(200).send(contents)
+    } catch (error) {
+      return response.status(500).send(error)
     }
   }
 }
