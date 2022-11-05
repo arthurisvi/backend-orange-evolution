@@ -31,6 +31,7 @@ Route.group(() => {
     Route.put("update/:id", "ContentsController.update");
     Route.delete("delete/:id", "ContentsController.destroy");
     Route.get("filter", "ContentsController.filterContents");
+    Route.get('initialContents', "ContentsController.getInitialContents");
   }).prefix("content");
 
   Route.group(() => {

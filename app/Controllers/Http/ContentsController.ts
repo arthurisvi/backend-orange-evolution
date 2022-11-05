@@ -97,4 +97,13 @@ export default class ContentsController {
       return response.status(500).send(error)
     }
   }
+  public async getInitialContents({ response }: HttpContextContract)  {
+    try{
+      const initialContents = await Content.query().where('category', 'initial')
+      return response.status(200).send(initialContents)
+
+    }catch (error){
+      console.log(error)
+    }
+  }
 }
