@@ -20,7 +20,10 @@ export default class ContentsController {
     try {
 
       const trail = await Trail.findOrFail(idTrail)
-
+      if(
+        category === 'initial' && idTrail !== null 
+      ) return response.status(400).send({ message: 'Operação Inválida' })
+      
       const newContent = await Content.create({
         title,
         type,
@@ -95,6 +98,15 @@ export default class ContentsController {
       return response.status(200).send(contents)
     } catch (error) {
       return response.status(500).send(error)
+    }
+  }
+  public async getInitialContents({ response }: HttpContextContract)  {
+    try{
+      const initialContents = await Content.query().where('category', 'initial')
+      return response.status(200).send(initialContents)
+
+    }catch (error){
+      console.log(error)
     }
   }
 }
