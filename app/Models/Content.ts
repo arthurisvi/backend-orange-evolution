@@ -1,7 +1,8 @@
 import { DateTime } from 'luxon'
-import { BaseModel, belongsTo, column, BelongsTo } from '@ioc:Adonis/Lucid/Orm'
+import { BaseModel, belongsTo, column, BelongsTo, manyToMany, ManyToMany } from '@ioc:Adonis/Lucid/Orm'
 import { category } from './Enums/ContentCategory';
 import Trail from './Trail';
+import User from './User';
 
 export default class Content extends BaseModel {
   @column({ isPrimary: true })
@@ -27,6 +28,12 @@ export default class Content extends BaseModel {
 
   @column()
   public trailId: number;
+
+  @manyToMany(() => User, {
+    pivotTable: 'content_user',
+    pivotColumns: ['status'],
+  })
+  public user: ManyToMany<typeof User>
 
   @belongsTo(() => Trail)
   public trail: BelongsTo<typeof Trail>

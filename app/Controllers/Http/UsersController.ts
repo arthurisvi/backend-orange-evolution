@@ -75,8 +75,31 @@ export default class UsersController {
 
       contentUser.status = status
 
-      contentUser.save
+      contentUser.save()
       return response.status(200).send(contentUser)
+    } catch (error) {
+      console.log(error)
+    }
+  }
+
+  public async getAssociatedContentByTrail({ params, response, request }) {
+
+    const { id } = params
+    const query = request.only(['id_trail'])
+
+    try {
+
+      const user = await User.findOrFail(id)
+
+      const contentsTrail = await user.related('contents').query().where('trail_id', query.id_trail)
+
+      let idsContent: number[] = []
+
+      contentsTrail.forEach(async (content) => idsContent.push(content.id))
+
+      const contentsUser = await ContentUser.query().where('user_id', id).andWhereIn('content_id', idsContent)
+
+      return response.status(200).send(contentsUser)
     } catch (error) {
       console.log(error)
     }
