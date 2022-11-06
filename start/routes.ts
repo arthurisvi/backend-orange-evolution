@@ -49,8 +49,10 @@ Route.group(() => {
       Route.get('show/:id', 'UsersController.show')
       Route.get('getTrails/:id', 'UsersController.getTrails')
       Route.get(':id/contentTrail', 'UsersController.getAssociatedContentByTrail')
+      Route.get('favoritedContents', 'UsersController.getFavoriteContents')
       Route.post('signTrail', 'UsersController.signTrail')
       Route.patch('contentStatus', 'UsersController.setContentStatus')
+      Route.patch('favoriteContent', 'UsersController.setFavoriteContent')
     }).prefix("user")
 
   }).middleware("auth:api");

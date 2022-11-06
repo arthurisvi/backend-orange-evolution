@@ -4,6 +4,7 @@ import ContentUser from 'App/Models/ContentUser';
 import Trail from 'App/Models/Trail'
 import User from 'App/Models/User'
 import { Status } from 'App/Models/Enums/Status';
+import { Request } from '@adonisjs/core/build/standalone';
 
 export default class UsersController {
 
@@ -82,7 +83,7 @@ export default class UsersController {
     }
   }
 
-  public async getAssociatedContentByTrail({ params, response, request }) {
+  public async getAssociatedContentByTrail({ params, response, request }: HttpContextContract) {
 
     const { id } = params
     const query = request.only(['id_trail'])
@@ -100,6 +101,38 @@ export default class UsersController {
       const contentsUser = await ContentUser.query().where('user_id', id).andWhereIn('content_id', idsContent)
 
       return response.status(200).send(contentsUser)
+    } catch (error) {
+      console.log(error)
+    }
+  }
+
+  public async setFavoriteContent({ response, auth, request }: HttpContextContract){
+
+    try {
+      const user = await auth.authenticate()
+
+      const {idContent} = request.all()
+
+      const contentUser = await ContentUser.query().where('user_id', user.id).andWhere('content_id', idContent).firstOrFail()
+      
+      contentUser.favorite = true;
+
+      contentUser.save()
+      
+      return response.status(200).send(contentUser)
+    } catch (error) {
+     console.log(error) 
+    }
+  }
+
+  public async getFavoriteContents({ response, auth }: HttpContextContract) {
+    try {
+
+      const user = await auth.authenticate()
+
+      const favoritedsContents = await ContentUser.query().where('favorite', true).andWhere('user_id', user.id)
+      
+      return response.status(200).send(favoritedsContents)
     } catch (error) {
       console.log(error)
     }
