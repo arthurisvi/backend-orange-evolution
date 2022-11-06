@@ -5,7 +5,7 @@ export default class Trails extends BaseSchema {
 
   public async up () {
     this.schema.createTable(this.tableName, (table) => {
-      table.increments('id')
+      table.string('id').primary()
       table.string('name').unique().notNullable()
       table.text('description').notNullable()
       table.integer('estimated_time').notNullable()

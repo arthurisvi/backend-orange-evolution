@@ -5,9 +5,9 @@ export default class ContentUsers extends BaseSchema {
 
   public async up () {
     this.schema.createTable(this.tableName, (table) => {
-      table.increments('id')
-      table.integer('user_id').unsigned().references('users.id')
-      table.integer('content_id').unsigned().references('contents.id')
+      table.string('id').primary()
+      table.string('user_id').unsigned().references('users.id')
+      table.string('content_id').unsigned().references('contents.id')
       table.enum('status', ['notStarted', 'finished']).defaultTo('notStarted')
       table.boolean('favorite').defaultTo(false)
       table.timestamps(true)

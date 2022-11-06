@@ -1,3 +1,4 @@
+import { v4 as uuidv4 } from "uuid";
 import { DateTime } from 'luxon'
 import Hash from '@ioc:Adonis/Core/Hash'
 import {
@@ -6,14 +7,20 @@ import {
   BaseModel,
   manyToMany,
   ManyToMany,
+  beforeCreate,
 } from '@ioc:Adonis/Lucid/Orm'
 import Tail from './Trail'
 import { UserTag } from './Enums/UserTag'
 import Content from './Content'
 
 export default class User extends BaseModel {
+  @beforeCreate()
+  public static async addUidHook(user: User) {
+    user.id = uuidv4();
+  }
+
   @column({ isPrimary: true })
-  public id: number
+  public id: string
 
   @column()
   public name: string
