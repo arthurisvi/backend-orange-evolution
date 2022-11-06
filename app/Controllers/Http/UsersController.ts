@@ -4,7 +4,6 @@ import ContentUser from 'App/Models/ContentUser';
 import Trail from 'App/Models/Trail'
 import User from 'App/Models/User'
 import { Status } from 'App/Models/Enums/Status';
-import { Request } from '@adonisjs/core/build/standalone';
 
 export default class UsersController {
 
@@ -94,7 +93,7 @@ export default class UsersController {
 
       const contentsTrail = await user.related('contents').query().where('trail_id', query.id_trail)
 
-      let idsContent: number[] = []
+      let idsContent: string[] = []
 
       contentsTrail.forEach(async (content) => idsContent.push(content.id))
 
@@ -114,14 +113,14 @@ export default class UsersController {
       const {idContent} = request.all()
 
       const contentUser = await ContentUser.query().where('user_id', user.id).andWhere('content_id', idContent).firstOrFail()
-      
+
       contentUser.favorite = true;
 
       contentUser.save()
-      
+
       return response.status(200).send(contentUser)
     } catch (error) {
-     console.log(error) 
+     console.log(error)
     }
   }
 
@@ -131,7 +130,7 @@ export default class UsersController {
       const user = await auth.authenticate()
 
       const favoritedsContents = await ContentUser.query().where('favorite', true).andWhere('user_id', user.id)
-      
+
       return response.status(200).send(favoritedsContents)
     } catch (error) {
       console.log(error)

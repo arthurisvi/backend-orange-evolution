@@ -5,9 +5,9 @@ export default class TrailUsers extends BaseSchema {
 
   public async up () {
     this.schema.createTable(this.tableName, (table) => {
-      table.increments('id')
-      table.integer('user_id').unsigned().references('users.id')
-      table.integer('trail_id').unsigned().references('trails.id')
+      table.increments('id').primary()
+      table.string('user_id').unsigned().references('users.id')
+      table.string('trail_id').unsigned().references('trails.id')
       table.enum('status', ['notStarted', 'inProgress', 'finished']).defaultTo('notStarted')
       table.timestamps(true)
     })

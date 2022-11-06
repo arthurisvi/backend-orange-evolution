@@ -10,7 +10,6 @@ class UserService{
   }
 
   public async createUser(newUser: UserDTO): Promise<User> {
-    console.log('NewUser no service: ', newUser);
     return this.userRepository.createUser(newUser);
   }
 
