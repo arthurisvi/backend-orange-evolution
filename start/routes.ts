@@ -25,29 +25,34 @@ Route.group(() => {
   Route.post("login", "AuthController.login");
 
   Route.group(() => {
-    Route.get("getAll", "ContentsController.index");
-    Route.post("create", "ContentsController.store");
-    Route.get("show/:id", "ContentsController.show");
-    Route.put("update/:id", "ContentsController.update");
-    Route.delete("delete/:id", "ContentsController.destroy");
-    Route.get("filter", "ContentsController.filterContents");
-    Route.get('initialContents', "ContentsController.getInitialContents");
-  }).prefix("content");
 
-  Route.group(() => {
-    Route.get('getAll', 'TrailsController.index')
-    Route.get('getContents/:id', 'TrailsController.getContents')
-  }).prefix("trail");
+    Route.group(() => {
+      Route.get("getAll", "ContentsController.index");
+      Route.get("show/:id", "ContentsController.show");
+      Route.get("filter", "ContentsController.filterContents");
+      Route.get('initialContents', "ContentsController.getInitialContents");
 
-  Route.group(() => {
-    Route.get('show/:id', 'UsersController.show')
-    Route.get('getTrails/:id', 'UsersController.getTrails')
-    Route.get(':id/contentTrail', 'UsersController.getAssociatedContentByTrail')
-    Route.post('signTrail', 'UsersController.signTrail')
-    Route.patch('contentStatus', 'UsersController.setContentStatus')
-  }).prefix("user")
-  // Route.group(() => {
+      Route.group(() => {
+        Route.post("create", "ContentsController.store");
+        Route.put("update/:id", "ContentsController.update");
+        Route.delete("delete/:id", "ContentsController.destroy");
+      }).middleware("userAdmin");
 
-  // }).middleware("auth:api");
+    }).prefix("content");
 
-}).prefix("api");
+    Route.group(() => {
+      Route.get('getAll', 'TrailsController.index')
+      Route.get('getContents/:id', 'TrailsController.getContents')
+    }).prefix("trail");
+
+    Route.group(() => {
+      Route.get('show/:id', 'UsersController.show')
+      Route.get('getTrails/:id', 'UsersController.getTrails')
+      Route.get(':id/contentTrail', 'UsersController.getAssociatedContentByTrail')
+      Route.post('signTrail', 'UsersController.signTrail')
+      Route.patch('contentStatus', 'UsersController.setContentStatus')
+    }).prefix("user")
+
+  }).middleware("auth:api");
+
+}).prefix("api")
