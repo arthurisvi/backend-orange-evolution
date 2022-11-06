@@ -17,6 +17,9 @@ export default class ContentUser extends BaseModel {
   @column()
   public status: Status
 
+  @column()
+  public favorite: boolean
+
   @column.dateTime({ autoCreate: true })
   public createdAt: DateTime
 

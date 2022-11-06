@@ -9,6 +9,7 @@ export default class ContentUsers extends BaseSchema {
       table.integer('user_id').unsigned().references('users.id')
       table.integer('content_id').unsigned().references('contents.id')
       table.enum('status', ['notStarted', 'finished']).defaultTo('notStarted')
+      table.boolean('favorite').defaultTo(false)
       table.timestamps(true)
     })
   }
