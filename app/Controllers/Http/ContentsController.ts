@@ -9,7 +9,7 @@ export default class ContentsController {
       const contents = await Content.all();
 
       return response.status(200).send(contents)
-    }catch(error){
+    } catch (error) {
       console.log(error)
     }
   }
@@ -20,10 +20,10 @@ export default class ContentsController {
     try {
 
       const trail = await Trail.findOrFail(idTrail)
-      if(
-        category === 'initial' && idTrail !== null 
-      ) return response.status(400).send({ message: 'Operação Inválida' })
-      
+      if (
+        category === 'initial' && idTrail !== null
+      ) return response.status(400).send({ message: 'Não é possível atribuir um conteúdo inicial a uma trilha! O conteúdo inicial é comum a todas as trilhas.' })
+
       const newContent = await Content.create({
         title,
         type,
@@ -43,7 +43,7 @@ export default class ContentsController {
     }
   }
 
-  public async show({params, response}: HttpContextContract) {
+  public async show({ params, response }: HttpContextContract) {
     const { id } = params
 
     try {
@@ -55,7 +55,7 @@ export default class ContentsController {
     }
   }
 
-  public async update({ request, response, params}: HttpContextContract) {
+  public async update({ request, response, params }: HttpContextContract) {
     const { id } = params
 
     const newContent = request.only(['title', 'type', 'duration', 'link', 'author', 'category'])
@@ -100,12 +100,12 @@ export default class ContentsController {
       return response.status(500).send(error)
     }
   }
-  public async getInitialContents({ response }: HttpContextContract)  {
-    try{
+  public async getInitialContents({ response }: HttpContextContract) {
+    try {
       const initialContents = await Content.query().where('category', 'initial')
       return response.status(200).send(initialContents)
 
-    }catch (error){
+    } catch (error) {
       console.log(error)
     }
   }
