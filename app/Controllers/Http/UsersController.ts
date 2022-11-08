@@ -9,9 +9,7 @@ export default class UsersController {
     const userAuth = await auth.authenticate()
 
     try {
-      const user = await User.query().preload('trails', (query) => {
-        query.where('user_id', userAuth.id)
-      });
+      const user = await User.query().where('id', userAuth.id).preload('trails').firstOrFail()
 
       return response.status(200).send(user)
     } catch (error) {
