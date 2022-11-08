@@ -2,7 +2,7 @@
 
 
 ## /user
-#### [POST] /register
+### [POST] /register
 * Entrada
 ```json
 {
@@ -21,7 +21,8 @@
 }
 ```
 
-#### [POST] /login
+### [POST] /login
+* Entrada
 ```json
 {
 	"email": "teste@gmail.com",
@@ -29,8 +30,17 @@
 }
 ```
 
+* Retorno
+```json
+{
+	"type": "bearer",
+	"token": "MQ.C8psOX2t5EsWYH3FGyVA__NaJNa0DwHfYoqOdSfvWOJFBSGEmippq7XWhcL-",
+	"expires_at": "2022-11-17T21:43:06.859-03:00"
+}
+```
 
-#### [GET] /myProfile -> retorna o usuário logado e seus dados
+
+### [GET] /myProfile -> retorna o usuário logado e seus dados
 Exige o bearer token no header da requisição
 
 * Retorno
@@ -56,7 +66,7 @@ Exige o bearer token no header da requisição
 }
 ```
 
-#### [GET] /getMyTrails -> exibe as trilhas que o usuário está cadastrado
+### [GET] /getMyTrails -> exibe as trilhas que o usuário está cadastrado
 Exige o bearer token no header da requisição
 * Retorno 
 ```json
@@ -72,7 +82,7 @@ Exige o bearer token no header da requisição
 ]
 ```
 
-#### [POST] /signTrail -> usuário se registra em uma trilha
+### [POST] /signTrail -> usuário se registra em uma trilha
 Exige o bearer token no header da requisição
 
 * Entrada
@@ -89,7 +99,7 @@ Exige o bearer token no header da requisição
 }
 ```
 
-#### [POST] /contentStatus -> marcar status do conteúdo 
+### [POST] /contentStatus -> marcar status do conteúdo 
 Exige o bearer token no header da requisição
 
 * Entrada
@@ -113,7 +123,7 @@ Exige o bearer token no header da requisição
 }
 ```
 
-#### [POST] /favoriteContent -> marcar conteúdo como favorito
+### [POST] /favoriteContent -> marcar conteúdo como favorito
 Exige o bearer token no header da requisição
 
 * Entrada
