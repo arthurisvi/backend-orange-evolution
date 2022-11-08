@@ -8,12 +8,12 @@ import { Request } from '@adonisjs/core/build/standalone';
 
 export default class UsersController {
 
-  public async show({ params, response }: HttpContextContract) {
-    const { id } = params
-
+  public async show({ auth, response }: HttpContextContract) {
+    const userAuth = await auth.authenticate()
+    
     try {
       const user = await User.query().preload('trails', (query) => {
-        query.where('user_id', id)
+        query.where('user_id', userAuth.id)
       });
 
       return response.status(200).send(user)
@@ -83,14 +83,12 @@ export default class UsersController {
     }
   }
 
-  public async getAssociatedContentByTrail({ params, response, request }: HttpContextContract) {
+  public async getAssociatedContentByTrail({ auth, response, request }: HttpContextContract) {
 
-    const { id } = params
+    const user = await auth.authenticate()
     const query = request.only(['id_trail'])
 
     try {
-
-      const user = await User.findOrFail(id)
 
       const contentsTrail = await user.related('contents').query().where('trail_id', query.id_trail)
 
@@ -98,7 +96,7 @@ export default class UsersController {
 
       contentsTrail.forEach(async (content) => idsContent.push(content.id))
 
-      const contentsUser = await ContentUser.query().where('user_id', id).andWhereIn('content_id', idsContent)
+      const contentsUser = await ContentUser.query().where('user_id', user.id).andWhereIn('content_id', idsContent)
 
       return response.status(200).send(contentsUser)
     } catch (error) {
