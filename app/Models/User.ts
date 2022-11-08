@@ -45,7 +45,7 @@ export default class User extends BaseModel {
 
   @manyToMany(() => Content, {
     pivotTable: 'content_user',
-    pivotColumns: ['status'],
+    pivotColumns: ['status', 'favorite'],
   })
   public contents: ManyToMany<typeof Content>
 
