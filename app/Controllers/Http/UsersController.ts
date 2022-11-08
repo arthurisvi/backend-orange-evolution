@@ -1,9 +1,7 @@
 import type { HttpContextContract } from '@ioc:Adonis/Core/HttpContext'
-import Content from 'App/Models/Content';
 import ContentUser from 'App/Models/ContentUser';
 import Trail from 'App/Models/Trail'
 import User from 'App/Models/User'
-import { Status } from 'App/Models/Enums/Status';
 
 export default class UsersController {
 
@@ -32,20 +30,6 @@ export default class UsersController {
 
       await user.related('trails').attach([trail.id]);
 
-      const contents = await Content.all();
-
-      if (contents.length > 0) {
-        contents.forEach(async (content) => {
-          if (content.trailId === idTrail || !content.trailId) {
-            await ContentUser.create({
-              content_id: content.id,
-              user_id: idUser,
-              status: Status.NOT_STARTED
-            })
-          }
-        })
-      }
-
       return response.status(200).send({ message: `Usuário cadastrado na trilha ${trail.name}` })
     } catch (error) {
       console.log(error)
@@ -66,16 +50,25 @@ export default class UsersController {
 
   }
 
-  public async setContentStatus({ request, response }: HttpContextContract) {
-    const { idContent, idUser, status } = request.all()
+  public async setContentStatus({ auth, request, response }: HttpContextContract) {
+    const { idContent, status } = request.all()
+    const user = await auth.authenticate()
 
     try {
 
-      const contentUser = await ContentUser.query().where('user_id', idUser).andWhere('content_id', idContent).firstOrFail()
+      const contentUser = await ContentUser.query().where('user_id', user.id).andWhere('content_id', idContent).firstOrFail()
 
-      contentUser.status = status
+      if (!contentUser) {
+        await ContentUser.create({
+              content_id: idContent,
+              user_id: user.id,
+              status: status
+        })
+      } else {
+        contentUser.status = status
+        contentUser.save()
+      }
 
-      contentUser.save()
       return response.status(200).send(contentUser)
     } catch (error) {
       console.log(error)
@@ -114,9 +107,16 @@ export default class UsersController {
 
       const contentUser = await ContentUser.query().where('user_id', user.id).andWhere('content_id', idContent).firstOrFail()
 
-      contentUser.favorite = true;
-
-      contentUser.save()
+      if (!contentUser) {
+        await ContentUser.create({
+          content_id: idContent,
+          user_id: user.id,
+          favorite: true
+        })
+      } else {
+        contentUser.favorite = true;
+        contentUser.save()
+      }
 
       return response.status(200).send(contentUser)
     } catch (error) {
