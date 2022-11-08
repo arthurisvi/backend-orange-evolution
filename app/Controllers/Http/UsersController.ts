@@ -7,7 +7,7 @@ export default class UsersController {
 
   public async show({ auth, response }: HttpContextContract) {
     const userAuth = await auth.authenticate()
-    
+
     try {
       const user = await User.query().preload('trails', (query) => {
         query.where('user_id', userAuth.id)
@@ -20,12 +20,11 @@ export default class UsersController {
 
   }
 
-  public async signTrail({ request, response }: HttpContextContract) {
-    const { idTrail, idUser } = request.all()
+  public async signTrail({ auth, request, response }: HttpContextContract) {
+    const user = await auth.authenticate()
+    const { idTrail } = request.all()
 
     try {
-
-      const user = await User.findOrFail(idUser)
       const trail = await Trail.findOrFail(idTrail)
 
       await user.related('trails').attach([trail.id]);
@@ -36,11 +35,10 @@ export default class UsersController {
     }
   }
 
-  public async getTrails({ params, response }: HttpContextContract) {
-    const { id } = params
+  public async getTrails({ auth, response }: HttpContextContract) {
+    const user = await auth.authenticate()
 
     try {
-      const user = await User.findOrFail(id)
       const trails = await user.related('trails').query()
 
       return response.status(200).send(trails)
@@ -56,20 +54,23 @@ export default class UsersController {
 
     try {
 
-      const contentUser = await ContentUser.query().where('user_id', user.id).andWhere('content_id', idContent).firstOrFail()
+      const contentUser = await ContentUser.query().where('user_id', user.id).andWhere('content_id', idContent).first()
 
       if (!contentUser) {
-        await ContentUser.create({
-              content_id: idContent,
-              user_id: user.id,
-              status: status
+        const contentUserCreated = await ContentUser.create({
+          content_id: idContent,
+          user_id: user.id,
+          status: status,
         })
+
+        return response.status(201).send(contentUserCreated)
       } else {
         contentUser.status = status
         contentUser.save()
+
+        return response.status(200).send(contentUser)
       }
 
-      return response.status(200).send(contentUser)
     } catch (error) {
       console.log(error)
     }
@@ -96,29 +97,31 @@ export default class UsersController {
     }
   }
 
-  public async setFavoriteContent({ response, auth, request }: HttpContextContract){
+  public async setFavoriteContent({ response, auth, request }: HttpContextContract) {
 
     try {
       const user = await auth.authenticate()
 
-      const {idContent} = request.all()
+      const { idContent, favorite } = request.all()
 
-      const contentUser = await ContentUser.query().where('user_id', user.id).andWhere('content_id', idContent).firstOrFail()
+      const contentUser = await ContentUser.query().where('user_id', user.id).andWhere('content_id', idContent).first()
 
       if (!contentUser) {
-        await ContentUser.create({
+        const contentUserCreated = await ContentUser.create({
           content_id: idContent,
           user_id: user.id,
-          favorite: true
+          favorite: favorite
         })
+
+        return response.status(201).send(contentUserCreated)
       } else {
-        contentUser.favorite = true;
+        contentUser.favorite = favorite;
         contentUser.save()
+        return response.status(200).send(contentUser)
       }
 
-      return response.status(200).send(contentUser)
     } catch (error) {
-     console.log(error)
+      console.log(error)
     }
   }
 
