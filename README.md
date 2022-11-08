@@ -1,4 +1,4 @@
-# Orange Evolution - API
+# Orange Evolution - Backend
 
 ## Como rodar a aplicação (DEV)
 1. Instale as dependências do projeto
