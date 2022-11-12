@@ -17,9 +17,11 @@ export default class TrailsController {
     try {
       const { id } = params;
 
+      const trail = await Trail.findOrFail(id);
+
       const contents = await Content.query().where('trail_id', id).orWhereNull('trail_id');
 
-      return response.status(200).send(contents)
+      return response.status(200).send({ trail, contents })
     } catch (error) {
       console.log(error)
     }
