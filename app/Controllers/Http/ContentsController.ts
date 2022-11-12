@@ -19,7 +19,7 @@ export default class ContentsController {
 
     try {
 
-      const trail = await Trail.findOrFail(idTrail)
+      const trail = await Trail.find(idTrail)
       if (
         category === 'initial' && idTrail !== null
       ) return response.status(400).send({ message: 'Não é possível atribuir um conteúdo inicial a uma trilha! O conteúdo inicial é comum a todas as trilhas.' })
