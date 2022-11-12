@@ -50,11 +50,12 @@ Route.group(() => {
       Route.get('getMyTrails', 'UsersController.getTrails')
       Route.get('contentTrail', 'UsersController.getAssociatedContentByTrail')
       Route.get('favoritedContents', 'UsersController.getFavoriteContents')
+      Route.get('notSubscribeTrails', 'UsersController.getNotSubscribeTrails')
       Route.post('signTrail', 'UsersController.signTrail')
       Route.post('contentStatus', 'UsersController.setContentStatus')
       Route.post('favoriteContent', 'UsersController.setFavoriteContent')
     }).prefix("user")
 
-  }).middleware("auth:api");
+}).middleware("auth:api");
 
 }).prefix("api")
