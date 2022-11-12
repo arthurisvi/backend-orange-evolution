@@ -135,4 +135,23 @@ export default class UsersController {
       console.log(error)
     }
   }
+
+  public async getNotSubscribeTrails({ response, auth }: HttpContextContract) {
+    try {
+      const user = await auth.authenticate()
+
+      const userTrails = await User.query().where('id', user.id).preload('trails').firstOrFail()
+
+      const idsTrails = userTrails.trails.map(trail => trail.id)
+
+      const trails = await Trail.all()
+
+      const filterTrails = trails.filter(trail => !idsTrails.includes(trail.id))
+
+      return response.status(200).send(filterTrails)
+    } catch (error) {
+      console.log(error)
+    }
+  }
 }
+
