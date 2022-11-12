@@ -1,4 +1,5 @@
 import type { HttpContextContract } from '@ioc:Adonis/Core/HttpContext'
+import Content from 'App/Models/Content';
 import ContentUser from 'App/Models/ContentUser';
 import Trail from 'App/Models/Trail'
 import User from 'App/Models/User'
@@ -130,7 +131,9 @@ export default class UsersController {
 
       const favoritedsContents = await ContentUser.query().where('favorite', true).andWhere('user_id', user.id)
 
-      return response.status(200).send(favoritedsContents)
+      const contents = await Content.query().whereIn('id', favoritedsContents.map(content => content.content_id))
+
+      return response.status(200).send(contents)
     } catch (error) {
       console.log(error)
     }
