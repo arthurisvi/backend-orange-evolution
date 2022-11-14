@@ -31,6 +31,7 @@ Route.group(() => {
       Route.get("show/:id", "ContentsController.show");
       Route.get("filter", "ContentsController.filterContents");
       Route.get('initialContents', "ContentsController.getInitialContents");
+      Route.get('isFavorited', "ContentsController.isFavorited");
 
       Route.group(() => {
         Route.post("create", "ContentsController.store");

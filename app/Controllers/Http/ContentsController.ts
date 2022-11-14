@@ -1,5 +1,6 @@
 import type { HttpContextContract } from '@ioc:Adonis/Core/HttpContext'
 import Content from 'App/Models/Content'
+import ContentUser from 'App/Models/ContentUser';
 import Trail from 'App/Models/Trail';
 
 export default class ContentsController {
@@ -30,7 +31,8 @@ export default class ContentsController {
         duration,
         link,
         author,
-        category
+        category,
+        trail_id: idTrail
       })
 
       if (trail) {
@@ -105,6 +107,28 @@ export default class ContentsController {
       const initialContents = await Content.query().where('category', 'initial')
       return response.status(200).send(initialContents)
 
+    } catch (error) {
+      console.log(error)
+    }
+  }
+
+  public async isFavorited({ auth, response, request }: HttpContextContract) {
+
+    try {
+
+      const user = await auth.authenticate()
+
+      const idContent = request.only(['id'])
+
+      const userContent = await ContentUser.query().where('user_id', user.id).andWhere('content_id', idContent).first()
+
+      if (userContent && userContent.favorite) {
+        console.log('é favorito')
+        return response.status(200).send({ isFavorited: true })
+      } else {
+        console.log('nao é favorito')
+        return response.status(200).send({ isFavorited: false })
+      }
     } catch (error) {
       console.log(error)
     }
