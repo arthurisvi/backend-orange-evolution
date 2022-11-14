@@ -6,16 +6,17 @@ import UserService from "App/Services/UserService";
 
 export default class AuthController {
 
-  public async login({ request, auth }: HttpContextContract) {
+  public async login({ request, auth, response}: HttpContextContract) {
     const email = request.input("email");
     const password = request.input("password");
     const token = await auth.use("api").attempt(email, password, {
       expiresIn: "10 days",
     });
-    return token.toJSON();
+
+    return response.status(200).send(token.toJSON());
   }
 
-  public async register({ request, auth }: HttpContextContract) {
+  public async register({ request, auth, response }: HttpContextContract) {
     const { email, password, name } = request.all()
 
     try {
@@ -33,8 +34,7 @@ export default class AuthController {
         expiresIn: "10 days",
       });
 
-      return token.toJSON();
-
+      return response.status(200).send(token.toJSON())
     } catch (error) {
       console.log(error)
     }
