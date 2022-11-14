@@ -48,7 +48,7 @@ export default class UsersController {
   }
 
   public async setContentStatus({ auth, request, response }: HttpContextContract) {
-    const { idContent, status } = request.all()
+    const { idContent, idTrail, status } = request.all()
     const user = await auth.authenticate()
 
     try {
@@ -60,6 +60,7 @@ export default class UsersController {
           content_id: idContent,
           user_id: user.id,
           status: status,
+          trail_id: idTrail
         })
 
         return response.status(201).send(contentUserCreated)
@@ -101,7 +102,7 @@ export default class UsersController {
     try {
       const user = await auth.authenticate()
 
-      const { idContent, favorite } = request.all()
+      const { idContent, idTrail, favorite } = request.all()
 
       const contentUser = await ContentUser.query().where('user_id', user.id).andWhere('content_id', idContent).first()
 
@@ -109,7 +110,8 @@ export default class UsersController {
         const contentUserCreated = await ContentUser.create({
           content_id: idContent,
           user_id: user.id,
-          favorite: favorite
+          favorite: favorite,
+          trail_id: idTrail
         })
 
         return response.status(201).send(contentUserCreated)

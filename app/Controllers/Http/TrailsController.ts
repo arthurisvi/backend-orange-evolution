@@ -43,6 +43,26 @@ export default class TrailsController {
     }
   }
 
+  public async getMyProgress({auth, response, request}: HttpContextContract){
+
+    const { idTrail } = request.all()
+    try {
+      const user = await auth.authenticate()
+
+      let userContents = await ContentUser.query().where('user_id', user.id)
+
+      userContents = userContents.filter((user) => (user.status === "finished") && ((user.trail_id === idTrail) || user.trail_id === null))
+
+      const contents = await Content.query().where('trail_id', idTrail).orWhere('trail_id', null)
+
+      const progress = ((userContents.length / contents.length) * 100)
+
+      return response.status(200).send({ progress })
+    } catch (error) {
+      console.log(error)
+    }
+  }
+
   public async store({}: HttpContextContract) {}
 
   public async show({}: HttpContextContract) {}

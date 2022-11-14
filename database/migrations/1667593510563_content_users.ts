@@ -8,6 +8,7 @@ export default class ContentUsers extends BaseSchema {
       table.string('id').primary()
       table.string('user_id').unsigned().references('users.id').onDelete('CASCADE')
       table.string('content_id').unsigned().references('contents.id').onDelete('CASCADE')
+      table.string('trail_id').unsigned().references('trails.id').nullable().onDelete('CASCADE')
       table.enum('status', ['notStarted', 'finished']).defaultTo('notStarted')
       table.boolean('favorite').defaultTo(false)
       table.timestamps(true)

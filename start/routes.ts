@@ -44,6 +44,7 @@ Route.group(() => {
     Route.group(() => {
       Route.get('getAll', 'TrailsController.index')
       Route.get('getContents/:id', 'TrailsController.getContents')
+      Route.get('getMyProgress', 'TrailsController.getMyProgress')
     }).prefix("trail");
 
     Route.group(() => {

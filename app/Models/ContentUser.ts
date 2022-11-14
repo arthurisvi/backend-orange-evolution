@@ -21,6 +21,9 @@ export default class ContentUser extends BaseModel {
   public user_id: string
 
   @column()
+  public trail_id: string
+
+  @column()
   public status: Status
 
   @column()
