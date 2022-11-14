@@ -21,7 +21,7 @@ export default class TrailSeeder extends BaseSeeder {
 
     await Trail.create(
       {
-        name: 'UI/UX Design',
+        name: 'UX/UI Design',
         description: 'Enquanto o foco do UI design é a criação de uma interface amigável, o UX é voltado para a maneira como o usuário vive o uso de um produto. O UI trata dos elementos com os quais o usuário interage, ao passo que o UX procura entender os comportamentos e emoções dessas pessoas no uso do produto.',
         estimatedTime: 30
       }
