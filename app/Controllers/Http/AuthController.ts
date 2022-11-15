@@ -1,35 +1,42 @@
 // import type { HttpContextContract } from '@ioc:Adonis/Core/HttpContext'
 import { HttpContextContract } from "@ioc:Adonis/Core/HttpContext";
 import { UserTag } from "App/Models/Enums/UserTag";
-import User from "App/Models/User";
+import UserDTO from "App/DTOs/UserDTO";
+import UserService from "App/Services/UserService";
 
 export default class AuthController {
 
-  public async login({ request, auth }: HttpContextContract) {
+  public async login({ request, auth, response}: HttpContextContract) {
     const email = request.input("email");
     const password = request.input("password");
     const token = await auth.use("api").attempt(email, password, {
       expiresIn: "10 days",
     });
-    return token.toJSON();
+
+    return response.status(200).send(token.toJSON());
   }
 
-  public async register({ request, auth }: HttpContextContract) {
-    const email = request.input("email");
-    const password = request.input("password");
-    const name = request.input("name");
+  public async register({ request, auth, response }: HttpContextContract) {
+    const { email, password, name } = request.all()
 
-    const user = await User.create({
-      name: name,
-      email: email,
-      password: password,
-      tag: UserTag.MEMBER
-    })
+    try {
 
-    const token = await auth.use("api").login(user, {
-      expiresIn: "10 days",
-    });
+      const user: UserDTO = {
+        name,
+        email,
+        password,
+        tag: UserTag.MEMBER
+      }
 
-    return token.toJSON();
+      const userCreated = await UserService.createUser(user);
+
+      const token = await auth.use("api").login(userCreated, {
+        expiresIn: "10 days",
+      });
+
+      return response.status(200).send(token.toJSON())
+    } catch (error) {
+      console.log(error)
+    }
   }
 }

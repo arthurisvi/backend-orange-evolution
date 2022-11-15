@@ -20,16 +20,44 @@
 
 import Route from '@ioc:Adonis/Core/Route'
 
-Route.get('/', async () => {
-  return { hello: 'world' }
-})
-
 Route.group(() => {
   Route.post("register", "AuthController.register");
   Route.post("login", "AuthController.login");
 
-  // Route.group(() => {
+  Route.group(() => {
 
-  // }).middleware("auth:api");
+    Route.group(() => {
+      Route.get("getAll", "ContentsController.index");
+      Route.get("show/:id", "ContentsController.show");
+      Route.get("filter", "ContentsController.filterContents");
+      Route.get('initialContents', "ContentsController.getInitialContents");
+      Route.get('isFavorited', "ContentsController.isFavorited");
 
-}).prefix("api");
+      Route.group(() => {
+        Route.post("create", "ContentsController.store");
+        Route.put("update/:id", "ContentsController.update");
+        Route.delete("delete/:id", "ContentsController.destroy");
+      }).middleware("userAdmin");
+
+    }).prefix("content");
+
+    Route.group(() => {
+      Route.get('getAll', 'TrailsController.index')
+      Route.get('getContents/:id', 'TrailsController.getContents')
+      Route.get('getMyProgress', 'TrailsController.getMyProgress')
+    }).prefix("trail");
+
+    Route.group(() => {
+      Route.get('myProfile', 'UsersController.show')
+      Route.get('getMyTrails', 'UsersController.getTrails')
+      Route.get('contentTrail', 'UsersController.getAssociatedContentByTrail')
+      Route.get('favoritedContents', 'UsersController.getFavoriteContents')
+      Route.get('notSubscribeTrails', 'UsersController.getNotSubscribeTrails')
+      Route.post('signTrail', 'UsersController.signTrail')
+      Route.post('contentStatus', 'UsersController.setContentStatus')
+      Route.post('favoriteContent', 'UsersController.setFavoriteContent')
+    }).prefix("user")
+
+}).middleware("auth:api");
+
+}).prefix("api")
