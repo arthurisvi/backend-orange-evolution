@@ -1,6 +1,7 @@
 // import type { HttpContextContract } from '@ioc:Adonis/Core/HttpContext'
 import { HttpContextContract } from "@ioc:Adonis/Core/HttpContext";
 import { UserTag } from "App/Models/Enums/UserTag";
+import User from "../../Models/User"
 import UserDTO from "App/DTOs/UserDTO";
 import UserService from "App/Services/UserService";
 
@@ -13,7 +14,9 @@ export default class AuthController {
       expiresIn: "10 days",
     });
 
-    return response.status(200).send(token.toJSON());
+    const user = await User.query().where('email', email).first()
+
+    return response.status(200).send({ token, user });
   }
 
   public async register({ request, auth, response }: HttpContextContract) {
