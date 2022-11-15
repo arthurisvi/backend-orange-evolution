@@ -32,6 +32,7 @@ export default class ContentsController {
         link,
         author,
         category,
+        //@ts-ignore
         trail_id: idTrail
       })
 
@@ -120,6 +121,7 @@ export default class ContentsController {
 
       const idContent = request.only(['id'])
 
+      //@ts-ignore
       const userContent = await ContentUser.query().where('user_id', user.id).andWhere('content_id', idContent).first()
 
       if (userContent && userContent.favorite) {

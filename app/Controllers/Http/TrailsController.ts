@@ -53,6 +53,7 @@ export default class TrailsController {
 
       userContents = userContents.filter((user) => (user.status === "finished") && ((user.trail_id === idTrail) || user.trail_id === null))
 
+      //@ts-ignore
       const contents = await Content.query().where('trail_id', idTrail).orWhere('trail_id', null)
 
       const progress = ((userContents.length / contents.length) * 100)
