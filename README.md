@@ -1,5 +1,11 @@
 # Orange Evolution - Backend
 
+## API em produção 
+https://api-orange-juice-evolution.herokuapp.com/api/
+
+## Documentação de rotas da API em
+api-documentation.md
+
 ## Como rodar a aplicação (DEV)
 1. Instale as dependências do projeto
 ```
