@@ -29,3 +29,7 @@ $ node ace db:seed
 ```
 $ npm run dev
 ```
+
+## Modelagem de dados
+![image](https://user-images.githubusercontent.com/83462514/202066304-1900cacc-39dc-4bb6-9bdd-f8d49c3b8b93.png)
+
